@@ -1,0 +1,92 @@
+﻿<Window x:Class="CybersecurityChatBotGUI.TaskAssistantForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CybersecurityChatBotGUI"
+        mc:Ignorable="d"
+        Title="Cybersecurity Task Assistant" Height="650" Width="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <local:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="My Cybersecurity Tasks" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+        <ListView Grid.Row="1" x:Name="tasksListView" ItemsSource="{Binding Tasks}" Margin="0,0,0,10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Status" Width="60">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding IsCompleted, Converter={StaticResource BoolToStatusConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Title" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                    <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                                    <Setter Property="Foreground" Value="Gray"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" Width="350"/>
+                    <GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding DueDate, StringFormat='{}{0:yyyy-MM-dd}'}" Width="100"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
+            <TextBlock Text="Add New Task:" FontWeight="Bold" Margin="0,0,0,5"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtTaskTitle" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Description:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtTaskDescription" Margin="0,0,0,5" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="40"/>
+
+                <CheckBox Grid.Row="2" Grid.Column="0" x:Name="chkEnableDueDate" Content="Set Due Date" VerticalAlignment="Center" Margin="0,0,5,0"
+                          Checked="ChkEnableDueDate_Checked" Unchecked="ChkEnableDueDate_Unchecked"/>
+                <DatePicker Grid.Row="2" Grid.Column="1" x:Name="dpDueDate" IsEnabled="False" Margin="0,0,0,5"/>
+
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Add Task" Click="BtnAddTask_Click" Margin="5"/>
+            <Button Content="Mark Complete/Incomplete" Click="BtnMarkComplete_Click" Margin="5"/>
+            <Button Content="Delete Task" Click="BtnDeleteTask_Click" Margin="5"/>
+            <Button Content="Close" Click="BtnClose_Click" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
